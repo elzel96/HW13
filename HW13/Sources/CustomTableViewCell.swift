@@ -11,6 +11,8 @@ class CustomTableViewCell: UITableViewCell {
     
     var isOn: Bool?
     
+    var onChanged: ((Bool) -> ())?
+    
     var model: Model? {
         didSet {
             guard let model = model else { return }
@@ -18,12 +20,14 @@ class CustomTableViewCell: UITableViewCell {
             title.text = model.title
             icon.image = model.icon
             imageContainer.backgroundColor = model.iconColor
-            isOn = model.isOn
-            switchButton.isOn = isOn ?? false
+            isOn = model.isOn ?? false
             if model.isOn == nil {
                 switchButton.isHidden = true
                 accessoryType = .disclosureIndicator
-            } else { accessoryView = switchButton }
+            } else {
+                switchButton.isHidden = false
+                switchButton.isOn = isOn ?? false
+            }
             additionalInfo.text = model.additionalInfo
             if model.additionalInfo == nil {
                 additionalInfo.isHidden = true
@@ -97,12 +101,12 @@ class CustomTableViewCell: UITableViewCell {
     // MARK: - Setups
 
     private func setupHierarchy() {
-        addSubview(imageContainer)
-        addSubview(icon)
-        addSubview(title)
-        addSubview(additionalInfo)
-        addSubview(switchButton)
-        addSubview(alertSign)
+        contentView.addSubview(imageContainer)
+        contentView.addSubview(icon)
+        contentView.addSubview(title)
+        contentView.addSubview(additionalInfo)
+        contentView.addSubview(switchButton)
+        contentView.addSubview(alertSign)
     }
 
     private func setupLayout() {
@@ -136,16 +140,15 @@ class CustomTableViewCell: UITableViewCell {
     // MARK: - Action
     
     @objc private func switchButtonActivated() {
-        isOn = switchButton.isOn
+        isOn?.toggle()
+        onChanged?(isOn ?? false)
     }
     
     // MARK: - Reuse
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        switchButton.isHidden = false
-        switchButton.isOn = isOn ?? false
-        alertSign.isHidden = false
-        additionalInfo.isHidden = false
+        accessoryView = nil
+        accessoryType = .none
     }
 }

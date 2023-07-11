@@ -68,6 +68,9 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CustomTableViewCell
         cell?.model = model[indexPath.section][indexPath.row]
+        cell?.onChanged = { [weak self] state in
+            self?.model[indexPath.section][indexPath.row].isOn = state
+        }
         return cell ?? UITableViewCell()
     }
 }
