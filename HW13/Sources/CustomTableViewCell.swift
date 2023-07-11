@@ -28,13 +28,17 @@ class CustomTableViewCell: UITableViewCell {
                 switchButton.isHidden = false
                 switchButton.isOn = isOn ?? false
             }
-            additionalInfo.text = model.additionalInfo
             if model.additionalInfo == nil {
                 additionalInfo.isHidden = true
+            } else {
+                additionalInfo.isHidden = false
+                additionalInfo.text = model.additionalInfo
             }
             if model.alertSign == nil {
                 alertSign.isHidden = true
-            } else { alertSign.image = model.alertSign }
+            } else {
+                alertSign.image = model.alertSign
+            }
         }
     }
     
