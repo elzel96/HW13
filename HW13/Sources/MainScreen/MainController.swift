@@ -7,56 +7,36 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MainController: UIViewController {
     
     private var model = Model.allModels
 
-    // MARK: - UI Elements
-    
-    private lazy var tableView: UITableView = {
-        let tableView = UITableView(frame: view.frame, style: .insetGrouped)
-        tableView.backgroundColor = .secondarySystemBackground
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.separatorStyle = .singleLine
-        tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "cell")
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        return tableView
-    }()
+    private var mainView: MainView? {
+        guard isViewLoaded else { return nil }
+        return view as? MainView
+    }
     
     // MARK: - Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        setupHierarchy()
-        setupLayout()
     }
 
     // MARK: - Setups
     
     private func setupView() {
-        view.backgroundColor = .systemBackground
+        view = MainView()
         title = "Настройки"
-    }
-
-    private func setupHierarchy() {
-        view.addSubview(tableView)
-    }
-    
-    private func setupLayout() {
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+        mainView?.backgroundColor = .systemBackground
+        mainView?.tableView.delegate = self
+        mainView?.tableView.dataSource = self
     }
 }
 
 // MARK: - Extensions
 
-extension ViewController: UITableViewDataSource {
+extension MainController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         model.count
     }
@@ -75,7 +55,7 @@ extension ViewController: UITableViewDataSource {
     }
 }
 
-extension ViewController: UITableViewDelegate {
+extension MainController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.section == 2 && indexPath.row == 11 {
@@ -91,7 +71,7 @@ extension ViewController: UITableViewDelegate {
         
         if indexPath.section == 0 && ( indexPath.row == 0 || indexPath.row == 5 ) {
         } else {
-            let viewController = DetailViewController()
+            let viewController = DetailController()
             viewController.model = model[indexPath.section][indexPath.row]
             navigationController?.pushViewController(viewController, animated: true)
         }
