@@ -65,7 +65,7 @@ extension MainController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true) // чтобы ячейка отжималась
+        tableView.deselectRow(at: indexPath, animated: true) 
         
         print("Нажата ячейка \(model[indexPath.section][indexPath.row].title)")
         
